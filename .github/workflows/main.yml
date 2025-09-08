@@ -1,8 +1,15 @@
 name: CI/CD workflow !
 on: push
 jobs:
-    build-frontend:
+    build-frontend-and-node-api:
         runs-on: ubuntu-latest
+        strategy:
+          matrix:
+            include:
+                - context_name: ./frontend
+                  image_name: ghcr.io/nbendev/cicd-projet2/frontend
+                - context_name: ./node-api
+                  image_name: ghcr.io/nbendev/cicd-projet2/node-api
         permissions:
           packages: write
         steps:
@@ -25,9 +32,8 @@ jobs:
             - name: Build and push
               uses: docker/build-push-action@v6
               with:
-               context: ./frontend
+               context: ${{ matrix.context_name }}
                push: true
-               tags: ghcr.io/nbendev/cicd-projet2/frontend:latest
-
-
-    # build-api-code:
+               tags: ${{ matrix.image_name }}:latest
+               cache-from: type=gha
+               cache-to: type=gha,mode=max
