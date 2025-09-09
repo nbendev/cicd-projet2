@@ -3,7 +3,7 @@ services:
   node-api:
     image: ghcr.io/nbendev/cicd-projet2/node-api:latest
     ports:
-      - "3000:3000"
+      - "3000:80"
   frontend:
     image: ghcr.io/nbendev/cicd-projet2/frontend:latest
     ports:
