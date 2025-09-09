@@ -1,7 +1,68 @@
 name: CI/CD workflow !
 on: push
 jobs:
+
+
+    tests-frontend:
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: ./frontend
+        steps:
+            - name: checkout
+              uses: actions/checkout@v5
+
+            - name: setup node
+              uses: actions/setup-node@v3
+              with:
+                cache: 'npm'
+                cache-dependency-path: ./frontend/package-lock.json
+
+            - name: install dependencies
+              run: npm ci --prefer-offline
+
+            - name: run linter
+              run: npm run linter
+
+            - name: npm audit
+              run: npm audit --audit-level=moderate
+
+
+
+    tests-backend:
+      runs-on: ubuntu-latest
+      defaults:
+            run:
+                working-directory: ./node-api
+      steps:
+            - name: checkout
+              uses: actions/checkout@v5
+
+            - name: setup node
+              uses: actions/setup-node@v3
+              with:
+                cache: 'npm'
+                cache-dependency-path: ./node-api/package-lock.json
+
+            - name: install dependencies
+              run: npm ci --prefer-offline
+
+            - name: run linter
+              run: npm run linter
+
+            - name: npm audit
+              run: npm audit --audit-level=moderate
+            
+            - name: exec units tests
+              run: npm run test:ci
+
+            - name: Upload coverage reports to Codecov
+              uses: codecov/codecov-action@v5
+              with:
+                token: ${{ secrets.CODECOV_TOKEN }}
+        
     build-frontend-and-node-api:
+        needs: [tests-frontend, tests-backend]
         runs-on: ubuntu-latest
         strategy:
           matrix:
