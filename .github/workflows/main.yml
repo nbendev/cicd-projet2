@@ -22,7 +22,7 @@ jobs:
               run: npm ci --prefer-offline
 
             - name: run linter
-              run: npm run linter
+              run: npm run lint
 
             - name: npm audit
               run: npm audit --audit-level=moderate
@@ -48,7 +48,7 @@ jobs:
               run: npm ci --prefer-offline
 
             - name: run linter
-              run: npm run linter
+              run: npm run lint
 
             - name: npm audit
               run: npm audit --audit-level=moderate
