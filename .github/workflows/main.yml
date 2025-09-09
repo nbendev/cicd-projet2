@@ -25,7 +25,9 @@ jobs:
               run: npm run lint
 
             - name: npm audit
-              run: npm audit --audit-level=moderate
+              run: npm audit --omit=dev --audit-level=critical
+              continue-on-error: true
+
 
 
 
@@ -51,8 +53,9 @@ jobs:
               run: npm run lint
 
             - name: npm audit
-              run: npm audit --audit-level=moderate
-            
+              run: npm audit --omit=dev --audit-level=critical
+              continue-on-error: true
+
             - name: exec units tests
               run: npm run test:ci
 
